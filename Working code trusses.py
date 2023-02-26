@@ -1,8 +1,7 @@
 import numpy as np
 import scipy.integrate as integrate
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
 from numpy.linalg import inv
+import math as m
 from functions import *
 
 #this simply suppresses scientific notation, just useful for debugging
@@ -11,41 +10,78 @@ np.set_printoptions(suppress=True)
 #variable definitions
 #unit set: kip, in, in2, kip*in, ksi
 
-#define number of elements, with number of nodes 1 more than that
-numElems = 3
-equalLength = True #input whether elements will be equal length
-numNodes = numElems + 1
+#define an array n elements tall, 2 elements wide. this array will give 
+#the order for computation, as well as the node pairs for each element
+# ex: [1,2] for element 1, [1,3] for element 2, [2,3] for elem. 3
+nodes = np.array([[1,2], [1,3], [2,3], [2,4], [3,4], [3,5], [4,5]])
+print(nodes)
+# list of lengths corresponding to each element
+lengths = np.array([1,2,3,4,5,6,7])
+# list of angles relative to positive x axis for each element
+angles = np.array([])
 
-#E (MPa), A (mm2), L (mm), t*a (N/mm)
-E = 70000 #70GPa
-A = 300
-L = 900 #5 ft
-tb = 4.5 #600 lbf/in = 0.6 kip/in
-mConstant = -0.005 #y=mx+b -> b= 4.5 (0,4.5) -> m= -4.5/900 = -0.005 (900,0)
-bConstant = 4.5
+#number of elements is the number of rows in nodes
+numElems = len(nodes)
+print(numElems)
+#number of nodes is the maximum number found in nodes
+numNodes = nodes.max()
+print(numNodes)
 
-#element length = total length/number of elements if equal length elements
-if equalLength == True:
-    elementL = L/numElems
+kMatrix = create_truss_k(1.5*(m.pi))
+print("k matrix:")
+print(kMatrix)
 
-print("element length =" + str(elementL))
+#units:
+stressUnit = "ksi"
+areaUnit = "in^2"
+lengthUnit = "in"
+forceUnit = "kip"
 
-barConstant = (E*A)/elementL
+E = 30000 #70GPa
+A = 1
+P1y = -2.5
 
-print("bar constant = " + str(barConstant))
+barConstant = np.zeros((numElems,1))
+for i in range(numElems):
+    barConstant[i] = (E*A)/lengths[i]
+
+print("bar constants = ")
+print(barConstant)
 
 #displacements in mm
-uList = [None]*numNodes #list of unknowns (node displacements)
+#two reactions per node
+uvList = [None]*(numNodes*2) #list of unknowns (node displacements)
 #we can input our known values
-uList[0] = 0 #fixed end at node 1
-uList[len(uList) - 1] = 0.02 
-print("u list:")
-print(uList)
+# these fixed nodes are taken straight from diagram (not adjusted for python counting)
+#fixed_nodes at [4,5]
+uv_BCs = np.array([[4,0,0],[5,0,0]])
+print("displacement bcs: [node number, x disp (u), y disp (v)]")
+print(uv_BCs)
+# u and v for any given node is given as (node# - 1)* 2 and ((node# -1)* 2) + 1 respectively.
+# this setup is advantageous over a numnodes x 2 array as it allows for easier value access later,
+# when many sub-arrays will be required.
 
-#forces
-forceList = [0]*numNodes
-forceList[0] = None
-forceList[len(forceList) - 1] = None
+#adjust uv list given displacement boundary conditions
+adjust_array(uvList, uv_BCs, "displacements")
+
+print("u & v list:")
+print(uvList)
+
+#forces list follows nearly the same procedure as uvList
+#we initialize forces as zeros rather than unknowns as unless we have a concentrated loading condition,
+# the value of the force at a node will be 0.
+forceList = [0]*(numNodes*2)
+#given loads: [node, x force, y force]
+force_BCs = np.array([[1, 0, P1y]])
+print(force_BCs)
+loadRows = (np.shape(force_BCs))[0]
+
+print("number of nodes loaded:")
+print(loadRows)
+
+#adjust force array given concentrated loading conditions
+adjust_array(forceList, force_BCs, "forces")
+
 print("force list: ")
 print(forceList)
 
@@ -57,7 +93,8 @@ print("empty ft:")
 print(ft)
 
 #begin by creating an array of zeroes with dimensions of [nodes x nodes]
-gStiff = np.zeros((numNodes, numNodes))
+gStiff = np.zeros((numNodes*2, numNodes*2))
+#print(gStiff)
 
 #loop through each element
 for i in range(numElems):
@@ -194,7 +231,7 @@ np.set_printoptions(suppress=True,
 
 printNodalDisplacements(uFinal, "mm")
 printStresses(stress, "MPa")
-
+"""
 #make output pdf
 pdf = PdfPages('Hw4_problem2_outputs.pdf')
 
@@ -239,4 +276,4 @@ pdf.savefig(stressFig)
 
 #show plots
 plt.show()
-pdf.close()
+pdf.close()"""
