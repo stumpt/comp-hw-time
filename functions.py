@@ -86,23 +86,29 @@ def check_even(num):
 
 def printNodalDisplacements(displacementArray, unit: str):
     print('\u2588'*100)
-    print("The nodal displacements, in [{0}], ordered from lowest to highest numbered node are:\n{1}".format(unit, displacementArray))
+    print(f"The nodal displacements, in [{unit}], ordered from lowest to highest numbered node are:\n{displacementArray}")
+    print('\u2588'*100)
+
+    
+def printTrussNodalDisplacements(displacementArray, unit: str):
+    print('\u2588'*100)
+    print(f"The nodal displacements (u,v), in [{unit}], ordered from lowest to highest numbered node are:\n{displacementArray}")
     print('\u2588'*100)
     
 def printGivenNodeDisplacement(node,displacementArray, unit: str):
     print('\u2588'*100)
-    print("\nThe displacement of point B (node {0}, in [{1}], is given as:\n{2}".format(node, unit, displacementArray[node-1]))
+    print(f"\nThe displacement of point B (node {node}, in [{unit}], is given as:\n{displacementArray[node-1]}")
     print('\u2588'*100)
 
 def printSpringForce(springForce, unit: str):
     print('\u2588'*100)
-    print("\nThe force in the spring, in [{0}], is:\n{1}".format(unit, springForce))
+    print(f"\nThe force in the spring, in [{unit}], is:\n{springForce}")
     print("\nNote: a (+) value indicates the element is in tension, while a (-) value in compression.\n")
     print('\u2588'*100)
 
 def printStresses(stressMatrix, unit:str):
     print('\u2588'*100)
-    print("\nThe element axial stresses, in [{0}], ordered from lowest to highest numbered element are:\n{1}".format(unit, stressMatrix))
+    print(f"\nThe element axial stresses, in [{unit}], ordered from lowest to highest numbered element are:\n{stressMatrix}")
     print("\nNote: a (+) value indicates the element is in tension, while a (-) value in compression.\n")
     print('\u2588'*100)
 
