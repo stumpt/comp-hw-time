@@ -64,7 +64,7 @@ def adjust_array(ArrayToAdjust, Given_BCs, tag: str):
             print("case 1 for BC " + str(i+1))	
             ArrayToAdjust[adjustedNode] = nodeXCondition
         else:
-            print("case 3 for BC " + str(i+1))
+        	print("case 3 for BC " + str(i+1))
 
         if Given_BCs[i,2] != ArrayToAdjust[adjustedNode + 1]:
             print("Case 2 for BC " + str(i+1))
