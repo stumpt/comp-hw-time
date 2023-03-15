@@ -1,0 +1,16 @@
+Numerical Outputs for HW6 Problem 0
+
+u1 = 0.0467 in
+phi1 = -0.0013 rad
+u2 = 0.0 in
+phi2 = -0.0014 rad
+u3 = 0.0 in
+phi3 = 0.0016 rad
+
+Forces, Moments = 
+[0.0, -0.0, -24.0, -288.0, 84.0, -288.0, -108.0, 0.0]
+lb, lb*in
+
+Maximum transverse shear stress = 45.4164 psi
+
+Maximum bending stress = 361.6617 psi

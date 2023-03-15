@@ -3,7 +3,7 @@ from numpy.linalg import inv
 import math as m
 
 #function to check if an array/matrix is symmetric
-def check_Symmetric(array):
+def check_symmetric(array):
     transposed = array.transpose()
     if array.shape == transposed.shape:
         if (array == transposed).all():
@@ -13,43 +13,47 @@ def check_Symmetric(array):
     else:
         print ("Error 2: The matrix is not symmetric. \n")
 
-#function to create [N]
-def create_N(X, L):
+#function to create [N]T
+def create_NT(X, L):
     N1 = (1/L**3) * ((2)*(X**3) - (3)*(X**2)*L + L**3)
     N2 = (1/L**3) * ((X**3)*L - (2)*(X**2)*(L**2) + X*(L**3))
     N3 = (1/L**3) * ((-2)*(X**3) + (3)*(X**2)*L)
     N4 = (1/L**3) * ((X**3)*L - (X**2)*(L**2))
-    Nmatrix = np.matrix([[N1], [N2], [N3], [N4]])
-    return Nmatrix
+    return np.matrix([N1, N2, N3, N4])
 
 #This simple function returns [k] for a given theta.
 def create_truss_k(theta):
-    trussK = np.array([
+    return np.array([
     [(m.cos(theta))**2, m.cos(theta) * m.sin(theta), -((m.cos(theta))**2), -(m.cos(theta) * m.sin(theta))], 
     [m.cos(theta) * m.sin(theta), (m.sin(theta))**2, -(m.cos(theta) * m.sin(theta)), -((m.sin(theta))**2)], 
     [-((m.cos(theta))**2), -(m.cos(theta) * m.sin(theta)), (m.cos(theta))**2, m.cos(theta) * m.sin(theta)], 
     [-(m.cos(theta) * m.sin(theta)), -((m.sin(theta))**2), m.cos(theta) * m.sin(theta), (m.sin(theta))**2]
     ])
-    return trussK
+
+def create_beam_local_k(L):
+    return np.array([
+        [12, 6*L, -12, 6*L],
+        [6*L, 4*(L**2), -6*L, 2*(L**2)],
+        [-12, -6*L, 12, -6*L],
+        [6*L, 2*(L**2), -6*L, 4*(L**2)]
+    ])
 
 def create_truss_stress_trig_matrix(theta):
-    trigMatrix = np.array([
+    return np.array([
         [m.cos(theta), m.sin(theta), 0, 0],
         [0, 0, m.cos(theta), m.sin(theta)]
     ])
-    return trigMatrix
 
-def getTrussLength(x1, y1, x2, y2):
+def get_element_length(x1, y1, x2, y2):
     x = (x2 - x1)**2
     y = (y2 - y1)**2
-    length = m.sqrt(x+y)
-    return length
+    return m.sqrt(x+y)
 
 
 #This function takes in known boundary conditions and an array, translating inputs into
 #usable arrays for the code.
 def adjust_array(ArrayToAdjust, Given_BCs, tag: str):
-    print("adjusting array to account for: " + tag + " boundary conditions")
+    print(f"adjusting array to account for: {tag} boundary conditions")
 	#first, count how many boundary conditions are given.
     loadRows = (np.shape(Given_BCs))[0]
     for i in range(loadRows):
@@ -61,18 +65,20 @@ def adjust_array(ArrayToAdjust, Given_BCs, tag: str):
         #Check: does the given BC match the current array element? if it doesn't, then change the array to the given BC.
         #this is done like this such that it works for both forces and displacements
         if Given_BCs[i,1] != ArrayToAdjust[adjustedNode]:
-            print("case 1 for BC " + str(i+1))	
+            print(f"case 1 for BC {str(i + 1)}")
             ArrayToAdjust[adjustedNode] = nodeXCondition
         else:
-            print("case 3 for BC " + str(i+1))
+            print(f"case 3 for BC {str(i + 1)}")
 
         if Given_BCs[i,2] != ArrayToAdjust[adjustedNode + 1]:
-            print("Case 2 for BC " + str(i+1))
+            print(f"Case 2 for BC {str(i + 1)}")
             ArrayToAdjust[adjustedNode + 1] = nodeYCondition
         else:
-            print("case 4 for BC " + str(i+1))
-    print("done adjusting " + tag + " array!")
+            print(f"case 4 for BC {str(i + 1)}")
+    print(f"done adjusting {tag} array!")
     return ArrayToAdjust
+
+    
 
 #this function allows for a transplant point to be provided (new row & column), and changes the new array to match the old
 #"block" within the old array. A block is essentially a 2x2 matrix of adjacent elements within a larger matrix.
@@ -83,12 +89,12 @@ def block_array_adjust(NewRow, NewColumn, NewArray, OldRow, OldColumn, OldArray,
     NewArray[(NewRow + 1), (NewColumn + 1)] += OldArray[(OldRow + 1), (OldColumn + 1)]
 
 def check_even(num):
-    if (num % 2) == 0:
-        #print("{0} is even".format(num))
-        return True
-    else:
-        #print("{0} is odd".format(num))
-        return False
+    return num % 2 == 0
+
+def get_radius_from_I(I):
+    return ((4*I)/m.pi)**0.25
+
+
     
 
 def printNodalDisplacements(displacementArray, unit: str):
