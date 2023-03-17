@@ -49,6 +49,8 @@ def get_element_length(x1, y1, x2, y2):
     y = (y2 - y1)**2
     return m.sqrt(x+y)
 
+def sum_until_n(arr, n):
+    return sum(arr[:n+1])
 
 #This function takes in known boundary conditions and an array, translating inputs into
 #usable arrays for the code.
