@@ -1,0 +1,20 @@
+Numerical Outputs for HW65 Problem 6
+
+u1 = -0.0 m
+phi1 = -0.1848958 rad
+u2 = -0.3984375 m
+phi2 = -0.0286458 rad
+u3 = -0.3707562 m
+phi3 = 0.0866127 rad
+u4 = -0.2273341 m
+phi4 = 0.1951196 rad
+u5 = -0.0 m
+phi5 = 0.2447917 rad
+
+Forces, Moments = 
+[200.0, -0.0, -200.0, 600.0, 200.0, -600.0, 33.3333, 688.8889, -33.3333, -688.8889, 333.3333, 511.1111, -333.3333, -511.1111, 700.0, -0.0]
+N, N*m
+
+Maximum transverse shear stress = 1383496.4763 Pa
+
+Maximum bending stress = 197689484.0181 Pa
