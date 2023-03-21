@@ -1,0 +1,25 @@
+Numerical Outputs for HW7 Problem 0
+
+
+Displacements, Angles of Rotation = 
+[0.0, -0.0, -0.0052, -0.0001, 0.0001, 0.0, 0.0]
+in, rad
+Forces, Moments = 
+[600.0, 43200.0, -600.0, -0.0, -600.0, 0.0, 600.0, -43200.0]
+N, N*in
+
+Maximum transverse shear stress = 11.8585 psi
+
+Maximum bending stress = 392.0289 psiNumerical Outputs for HW7 Problem 0
+
+
+Displacements, Angles of Rotation = 
+[0.0, -0.0, -0.0052, -0.0001, 0.0001, 0.0, 0.0]
+in, rad
+Forces, Moments = 
+[600.0, 43200.0, -600.0, -0.0, -600.0, 0.0, 600.0, -43200.0]
+N, N*in
+
+Maximum transverse shear stress = 11.8585 psi
+
+Maximum bending stress = 392.0289 psi
